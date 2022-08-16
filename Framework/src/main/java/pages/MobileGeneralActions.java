@@ -6,9 +6,17 @@ import io.appium.java_client.MobileElement;
 import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.Activity;
 import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.ios.IOSDriver;
+import io.appium.java_client.touch.WaitOptions;
 import io.appium.java_client.touch.offset.PointOption;
 import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.Point;
+import org.openqa.selenium.ScreenOrientation;
+import org.openqa.selenium.interactions.touch.TouchActions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import utilities.CapabilityLoader;
 
 import java.time.Duration;
@@ -107,24 +115,28 @@ public class MobileGeneralActions extends BasePage {
      */
     public void elementAttributeShouldMatch(String locator, String attr_name, String value)
     {
+        MobileElement elem = getElementByLocator(locator);
 
+        if (elem.getAttribute(attr_name) == null)
+            failStep("Element '" + locator + "' does not contain attribute '" + attr_name + "'");
+
+        if (!elem.getAttribute(attr_name).equals(value))
+            failStep("Element '" + locator + "' attribute '" + attr_name + "' is of value '" + elem.getAttribute(attr_name) + "'. Expected value '" + value + "'.");
+
+        passStep("Element '" + locator + "' has value '" + value + "' for attribute '" + attr_name + "'.");
     }
-
-    /**
-     * @name Element Name Should Be
-     */
-    public void elementNameShouldBe(String locator, String value)
-    {
-
-    }
-
     /**
      * Verifies that element identified with locator is disabled.
      * @name Element Should Be Disabled
      */
     public void elementShouldBeDisabled(String locator)
     {
+        MobileElement elem = getElementByLocator(locator);
 
+        if (elem.isEnabled())
+            failStep("The element '" + locator + "' is enabled.");
+
+        passStep("The element '" + locator + "' is disabled.");
     }
 
     /**
@@ -133,7 +145,12 @@ public class MobileGeneralActions extends BasePage {
      */
     public void elementShouldBeEnabled(String locator)
     {
+        MobileElement elem = getElementByLocator(locator);
 
+        if (!elem.isEnabled())
+            failStep("The element '" + locator + "' is disabled.");
+
+        passStep("The element '" + locator + "' is enabled.");
     }
 
     /**
@@ -142,7 +159,12 @@ public class MobileGeneralActions extends BasePage {
      */
     public void elementShouldBeVisible(String locator)
     {
+        MobileElement elem = getElementByLocator(locator);
 
+        if (!elem.isDisplayed())
+            failStep("The element '" + locator + "' is not visible.");
+
+        passStep("The element '" + locator + "' is visible.");
     }
 
     /**
@@ -151,7 +173,12 @@ public class MobileGeneralActions extends BasePage {
      */
     public void elementShouldContainText(String locator, String text)
     {
+        MobileElement elem = getElementByLocator(locator);
 
+        if (!elem.getText().contains(text))
+            failStep("The element '" + locator + "' does not contain text '" + text + "'. Found '" + elem.getText() + "'");
+
+        passStep("The element contains text '" + text + "'");
     }
 
     /**
@@ -160,7 +187,12 @@ public class MobileGeneralActions extends BasePage {
      */
     public void elementShouldNotContainText(String locator, String text)
     {
+        MobileElement elem = getElementByLocator(locator);
 
+        if (elem.getText().contains(text))
+            failStep("The element '" + locator + "' contains text '" + text + "'. Found '" + elem.getText() + "'");
+
+        passStep("The element '" + locator + "' contains text '" + text + "'");
     }
 
     /**
@@ -169,15 +201,12 @@ public class MobileGeneralActions extends BasePage {
      */
     public void elementTextShouldBe(String locator, String text)
     {
+        MobileElement elem = getElementByLocator(locator);
 
-    }
+        if (!elem.getText().equals(text))
+            failStep("The element '" + locator + "' text is '" + elem.getText() + "'. Expected '" + text + "'");
 
-    /**
-     * @name Element Value Should Be
-     */
-    public void elementValueShouldBe(String locator, String text)
-    {
-
+        passStep("The element '" + locator + "' text is '" + text + "'");
     }
 
     /**
@@ -186,7 +215,9 @@ public class MobileGeneralActions extends BasePage {
      */
     public void executeAdbShell(String command)
     {
+        m_Driver.execute(command);
 
+        passStep("Executing adb shell command '" + command + "'");
     }
 
     /**
@@ -195,7 +226,9 @@ public class MobileGeneralActions extends BasePage {
      */
     public void executeAsyncScript(String script)
     {
+        m_Driver.executeAsyncScript(script);
 
+        passStep("Executing async script '" + script + "'");
     }
 
     /**
@@ -204,7 +237,9 @@ public class MobileGeneralActions extends BasePage {
      */
     public void executeScript(String script)
     {
+        m_Driver.executeScript(script);
 
+        passStep("Executing script '" + script + "'");
     }
 
     /**
@@ -213,16 +248,7 @@ public class MobileGeneralActions extends BasePage {
      */
     public String getAppiumSessionId()
     {
-        return "";
-    }
-
-    /**
-     * Gets the timeout in seconds that is used by various keywords.
-     * @name Get Appium Timeout
-     */
-    public int getAppiumTimeout()
-    {
-        return 0;
+        return m_Driver.getSessionId().toString();
     }
 
     /**
@@ -244,48 +270,36 @@ public class MobileGeneralActions extends BasePage {
     }
 
     /**
-     * Get available contexts.
-     * @name Get Contexts
-     */
-    public String getContexts()
-    {
-        return "";
-    }
-
-    /**
-     * Get current context.
-     * @name Get Current Context
-     */
-    public String getCurrentContext()
-    {
-        return "";
-    }
-
-    /**
      * Get element attribute using given attribute: name, value,...
      * @name Get Element Attribute
      */
-    public void getElementAttribute(String locator, String attribute)
+    public String getElementAttribute(String locator, String attribute)
     {
+        MobileElement elem = getElementByLocator(locator);
 
+        return elem.getAttribute(attribute);
     }
 
     /**
      * Get element location
      * @name Get Element Location
      */
-    public void getElementLocation(String locator)
+    public Point getElementLocation(String locator)
     {
+        MobileElement elem = getElementByLocator(locator);
 
+        return elem.getLocation();
     }
 
     /**
      * Get element size
      * @name Get Element Size
      */
-    public void getElementSize(String locator)
+    public Dimension getElementSize(String locator)
     {
+        MobileElement elem = getElementByLocator(locator);
 
+        return elem.getSize();
     }
 
     /**
@@ -294,7 +308,7 @@ public class MobileGeneralActions extends BasePage {
      */
     public int getMatchingXpathCount(String xpath)
     {
-        return 0;
+        return m_Driver.findElements(By.xpath(xpath)).size();
     }
 
     /**
@@ -303,34 +317,18 @@ public class MobileGeneralActions extends BasePage {
      */
     public String getSource()
     {
-        return "";
+        return m_Driver.getPageSource();
     }
 
     /**
      * Get element text (for hybrid and mobile browser use xpath locator, others might cause problem)
      * @name Get Text
      */
-    public void getText(String locator)
+    public String getText(String locator)
     {
+        MobileElement elem = getElementByLocator(locator);
 
-    }
-
-    /**
-     * Returns the first WebElement object matching locator.
-     * @name Get Webelement
-     */
-    public void getWebelement(String locator)
-    {
-
-    }
-
-    /**
-     * Returns list of WebElement objects matching locator.
-     * @name Get Webelements
-     */
-    public void getWebelements(String locator)
-    {
-
+        return elem.getText();
     }
 
     /**
@@ -339,7 +337,7 @@ public class MobileGeneralActions extends BasePage {
      */
     public int getWindowHeight()
     {
-        return 0;
+        return m_Driver.manage().window().getSize().height;
     }
 
     /**
@@ -348,25 +346,7 @@ public class MobileGeneralActions extends BasePage {
      */
     public int getWindowWidth()
     {
-        return 0;
-    }
-
-    /**
-     * Goes one step backward in the browser history.
-     * @name Go Back
-     */
-    public void goBack()
-    {
-
-    }
-
-    /**
-     * Opens URL in default web browser.
-     * @name Go To Url
-     */
-    public void goToUrl(String url)
-    {
-
+        return m_Driver.manage().window().getSize().width;
     }
 
     /**
@@ -375,16 +355,9 @@ public class MobileGeneralActions extends BasePage {
      */
     public void hideKeyboard()
     {
+        m_Driver.hideKeyboard();
 
-    }
-
-    /**
-     * Types the given password into text field identified by locator.
-     * @name Input Password
-     */
-    public void inputPassword(String locator, String pswd)
-    {
-
+        passStep("Hide keyboard");
     }
 
     /**
@@ -393,7 +366,11 @@ public class MobileGeneralActions extends BasePage {
      */
     public void inputText(String locator, String text)
     {
+        MobileElement elem = getElementByLocator(locator);
 
+        elem.sendKeys(text);
+
+        passStep("Input text '" + text + "' into element '" + locator + "'");
     }
 
     /**
@@ -402,7 +379,11 @@ public class MobileGeneralActions extends BasePage {
      */
     public void inputValue(String locator, String value)
     {
+        MobileElement elem = getElementByLocator(locator);
 
+        elem.setValue(value);
+
+        passStep("Ser value '" + value + "' into element '" + locator + "'");
     }
 
     /**
@@ -426,30 +407,14 @@ public class MobileGeneralActions extends BasePage {
     }
 
     /**
-     * Return true if Android keyboard is displayed or False if not displayed No parameters are used.
-     * @name Is Keyboard Shown
-     */
-    public Boolean isKeyboardShown()
-    {
-        return false;
-    }
-
-    /**
      * Set the device orientation to LANDSCAPE
      * @name Landscape
      */
     public void landscape()
     {
+        m_Driver.rotate(ScreenOrientation.LANDSCAPE);
 
-    }
-
-    /**
-     * Launch application. Application can be launched while Appium session running. This keyword can be used to launch application during test case or between test cases.
-     * @name Launch Application
-     */
-    public void launchApplication()
-    {
-
+        passStep("Set orientation to landscape");
     }
 
     /**
@@ -458,7 +423,9 @@ public class MobileGeneralActions extends BasePage {
      */
     public void lock()
     {
+        ((IOSDriver) m_Driver).lockDevice();
 
+        passStep("Device locked");
     }
 
     /**
@@ -467,23 +434,18 @@ public class MobileGeneralActions extends BasePage {
      */
     public void longPress(String locator)
     {
+        TouchActions action = new TouchActions(m_Driver);
+        action.longPress(getElementByLocator(locator));
+        action.perform();
 
-    }
-
-    /**
-     * Sends a long press of keycode to the device.
-     * @name Long Press Keycode
-     */
-    public void longPressKeycode(String locator, String keycode)
-    {
-
+        passStep("Long press element '" + locator + "'");
     }
 
     /**
      * Opens a new application to given Appium server. Capabilities of appium server,
-     * @name Open Application
+     * @name Connect Appium
      */
-    public void openApplication(String remote_url)
+    public void connectAppium(String remote_url)
     {
         setDriver(CapabilityLoader.createDriver(remote_url));
     }
@@ -494,16 +456,12 @@ public class MobileGeneralActions extends BasePage {
      */
     public void pageShouldContainElement(String locator)
     {
+        MobileElement elem =  (MobileElement) m_Driver.findElement(By.xpath(locator));
 
-    }
+        if (elem == null)
+            failStep("Element not found with locator " + locator);
 
-    /**
-     * Verifies that current page contains text.
-     * @name Page Should Contain Text
-     */
-    public void pageShouldContainText(String text)
-    {
-
+        passStep("Element found with locator '" + locator + "'");
     }
 
     /**
@@ -512,25 +470,12 @@ public class MobileGeneralActions extends BasePage {
      */
     public void pageShouldNotContainElement(String locator)
     {
+        MobileElement elem =  (MobileElement) m_Driver.findElement(By.xpath(locator));
 
-    }
+        if (elem != null)
+            failStep("Element found with locator " + locator);
 
-    /**
-     * Verifies that current page not contains text.
-     * @name Page Should Not Contain Text
-     */
-    public void pageShouldNotContainText(String text)
-    {
-
-    }
-
-    /**
-     * Pinch in on an element a certain amount.
-     * @name Pinch
-     */
-    public void pinch(String locator)
-    {
-
+        passStep("Element not found with locator '" + locator + "'");
     }
 
     /**
@@ -539,16 +484,9 @@ public class MobileGeneralActions extends BasePage {
      */
     public void portrait()
     {
+        m_Driver.rotate(ScreenOrientation.PORTRAIT);
 
-    }
-
-    /**
-     * Sends a press of keycode to the device.
-     * @name Press Keycode
-     */
-    public void pressKeycode(String keycode)
-    {
-
+        passStep("Set orientation to portrait");
     }
 
     /**
@@ -557,16 +495,9 @@ public class MobileGeneralActions extends BasePage {
      */
     public void quitApplication()
     {
+        m_Driver.closeApp();
 
-    }
-
-    /**
-     * Removes the application that is identified with an application id
-     * @name Remove Application
-     */
-    public void removeApplication()
-    {
-
+        passStep("Close application");
     }
 
     /**
@@ -575,70 +506,22 @@ public class MobileGeneralActions extends BasePage {
      */
     public void resetApplication()
     {
+        m_Driver.resetApp();
 
+        passStep("Reset application");
     }
 
     /**
-     * Scrolls from one element to another Key attributes for arbitrary elements are id and name.
-     * @name Scroll
+     * Scrolls to element
+     * @name Scroll to Element
      */
-    public void scroll(String startLocator, String endLocator)
+    public void scrollToElement(String locator)
     {
+        TouchActions action = new TouchActions(m_Driver);
+        action.scroll(getElementByLocator(locator), 0, 0);
+        action.perform();
 
-    }
-
-    /**
-     * Scrolls down to element
-     * @name Scroll Down
-     */
-    public void scrollDown(String locator)
-    {
-
-    }
-
-    /**
-     * Scrolls up to element
-     * @name Scroll Up
-     */
-    public void scrollUp(String locator)
-    {
-
-    }
-
-    /**
-     * Sets the timeout in seconds used by various keywords.
-     * @name Set Appium Timeout
-     */
-    public void setAppiumTimeout(int seconds)
-    {
-
-    }
-
-    /**
-     * Set location
-     * @name Set Location
-     */
-    public void setLocation(String latitude, String longitude, String altitude)
-    {
-
-    }
-
-    /**
-     * Sets the network connection Status.
-     * @name Set Network Connection Status
-     */
-    public void setNetworkConnectionStatus(int status)
-    {
-
-    }
-
-    /**
-     * Shake the device
-     * @name Shake
-     */
-    public void shake()
-    {
-
+        passStep("Scroll to element '" + locator + "'");
     }
 
     /**
@@ -647,34 +530,14 @@ public class MobileGeneralActions extends BasePage {
      */
     public void swipe(int start_x, int start_y, int offset_x, int offset_y, int duration)
     {
+        new TouchAction(m_Driver)
+                .press(PointOption.point(start_x, start_y))
+                // a bit more reliable when we add small wait
+                .waitAction(WaitOptions.waitOptions(Duration.ofMillis(duration)))
+                .moveTo(PointOption.point(offset_x, offset_y))
+                .release().perform();
 
-    }
-
-    /**
-     * Swipe from one percent of the screen to another percent, for an optional duration. Normal swipe fails to scale for different screen resolutions, this can be avoided using percent.
-     * @name Swipe By Percent
-     */
-    public void swipeByPercent(int start_x, int start_y, int end_x, int end_y, int duration)
-    {
-
-    }
-
-    /**
-     * Switches the active application by index or alias.
-     * @name Switch Application
-     */
-    public void switchApplication(int index)
-    {
-
-    }
-
-    /**
-     * Switch to a new context
-     * @name Switch To Context
-     */
-    public void switchToContext(String context_name)
-    {
-
+        passStep("Swipe action");
     }
 
     /**
@@ -683,25 +546,11 @@ public class MobileGeneralActions extends BasePage {
      */
     public void tap(String locator)
     {
+        TouchActions action = new TouchActions(m_Driver);
+        action.singleTap(getElementByLocator(locator));
+        action.perform();
 
-    }
-
-    /**
-     * Sends one or more taps with one or more touch points.iOS only.
-     * @name Tap With Number Of Taps
-     */
-    public void tapWithNumberOfTaps(String locator, int noTaps)
-    {
-
-    }
-
-    /**
-     * Verifies that element identified with text is visible.
-     * @name Text Should Be Visible
-     */
-    public void textShouldBeVisible(String text)
-    {
-
+        passStep("Tap element '" + locator + "'");
     }
 
     /**
@@ -710,16 +559,8 @@ public class MobileGeneralActions extends BasePage {
      */
     public void waitUntilElementIsVisible(String locator)
     {
-
-    }
-
-    /**
-     * Waits until text appears on current page.
-     * @name Wait Until Page Contains Text
-     */
-    public void waitUntilPageContains(String text)
-    {
-
+        WebDriverWait wait = new WebDriverWait(m_Driver, 10);
+        wait.until(ExpectedConditions.visibilityOf(getElementByLocator(locator)));
     }
 
     /**
@@ -728,34 +569,8 @@ public class MobileGeneralActions extends BasePage {
      */
     public void waitUntilPageContainsElement(String locator)
     {
-
-    }
-
-    /**
-     * Waits until text disappears from current page.
-     * @name Wait Until Page Does Not Contain Text
-     */
-    public void waitUntilPageDoesNotContain(String text)
-    {
-
-    }
-
-    /**
-     * Waits until element specified with locator disappears from current page.
-     * @name Wait Until Page Does Not Contain Element
-     */
-    public void waitUntilPageDoesNotContainElement(String locator)
-    {
-
-    }
-
-    /**
-     * Zooms in on an element a certain amount.
-     * @name Zoom
-     */
-    public void zoom(String locator)
-    {
-
+        WebDriverWait wait = new WebDriverWait(m_Driver, 10);
+        wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath(locator)));
     }
 
     private MobileElement getElementByLocator(String locator)
