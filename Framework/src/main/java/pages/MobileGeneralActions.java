@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ser.Serializers;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.TouchAction;
+import io.appium.java_client.android.Activity;
+import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.touch.offset.PointOption;
 import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.openqa.selenium.By;
@@ -404,12 +406,23 @@ public class MobileGeneralActions extends BasePage {
     }
 
     /**
+     * Start Activity App via Appium
+     * @name Start Activity
+     */
+    public void startActivity(String applicationPackage, String applicationActivity)
+    {
+        ((AndroidDriver) m_Driver).startActivity(new Activity(    applicationPackage, applicationActivity));
+
+        passStep("Start activity '" + applicationActivity + "' from package '" + applicationPackage + "'");
+    }
+
+    /**
      * Install App via Appium
      * @name Install App
      */
-    public void installApp(String applicationPath, String applicationPackage)
+    public void installApp(String applicationPath)
     {
-
+        m_Driver.installApp(applicationPath);
     }
 
     /**
