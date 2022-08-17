@@ -574,9 +574,30 @@ public class MobileGeneralActions extends BasePage {
         wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath(locator)));
     }
 
-    private MobileElement getElementByLocator(String locator)
+    private MobileElement getElementByLocator(String objectLocator)
     {
-        MobileElement elem =  (MobileElement) m_Driver.findElement(By.xpath(locator));
+        By locator = null;
+        if (objectLocator.startsWith("id:")) {
+            locator = By.id(objectLocator.replace("id:", ""));
+        } else if (objectLocator.startsWith("name:")) {
+            locator = By.name(objectLocator.replace("name:", ""));
+        } else if (objectLocator.startsWith("class:")) {
+            locator = By.className(objectLocator.replace("class:", ""));
+        }  else if (objectLocator.startsWith("tagname:")) {
+            locator = By.tagName(objectLocator.replace("tagname:", ""));
+        } else if (objectLocator.startsWith("xpath:")) {
+            locator = By.xpath(objectLocator.replace("xpath:", ""));
+        } else if (objectLocator.startsWith("css:")) {
+            locator = By.cssSelector(objectLocator.replace("css:", ""));
+        } else if (objectLocator.startsWith("linktext:")) {
+            locator = By.linkText(objectLocator.replace("linktext:", ""));
+        } else if (objectLocator.startsWith("text:")) {
+            locator = By.xpath("//*[text()=\"" + objectLocator.replace("text:", "") + "\"]");
+        } else {
+            locator = By.xpath(objectLocator);
+        }
+
+        MobileElement elem = (MobileElement) m_Driver.findElement(locator);
 
         if (elem == null)
             failStep("Element not found with locator " + locator);
