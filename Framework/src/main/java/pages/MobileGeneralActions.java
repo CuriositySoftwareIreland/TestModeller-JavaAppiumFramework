@@ -2,6 +2,7 @@ package pages;
 
 import com.fasterxml.jackson.databind.ser.Serializers;
 import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.MobileBy;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.Activity;
@@ -579,20 +580,14 @@ public class MobileGeneralActions extends BasePage {
         By locator = null;
         if (objectLocator.startsWith("id:")) {
             locator = By.id(objectLocator.replace("id:", ""));
-        } else if (objectLocator.startsWith("name:")) {
-            locator = By.name(objectLocator.replace("name:", ""));
         } else if (objectLocator.startsWith("class:")) {
             locator = By.className(objectLocator.replace("class:", ""));
-        }  else if (objectLocator.startsWith("tagname:")) {
-            locator = By.tagName(objectLocator.replace("tagname:", ""));
         } else if (objectLocator.startsWith("xpath:")) {
             locator = By.xpath(objectLocator.replace("xpath:", ""));
         } else if (objectLocator.startsWith("css:")) {
             locator = By.cssSelector(objectLocator.replace("css:", ""));
-        } else if (objectLocator.startsWith("linktext:")) {
-            locator = By.linkText(objectLocator.replace("linktext:", ""));
-        } else if (objectLocator.startsWith("text:")) {
-            locator = By.xpath("//*[text()=\"" + objectLocator.replace("text:", "") + "\"]");
+        } else if (objectLocator.startsWith("accessibilityId:")) {
+            locator = MobileBy.AccessibilityId(objectLocator.replace("accessibilityId:", ""));
         } else {
             locator = By.xpath(objectLocator);
         }
