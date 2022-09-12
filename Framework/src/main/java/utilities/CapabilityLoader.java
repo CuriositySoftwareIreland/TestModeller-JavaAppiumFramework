@@ -62,12 +62,12 @@ public class CapabilityLoader
         return getDesiredCapabilities().getCapability(capabilityName).toString();
     }
 
-    public static AndroidDriver createDriver(String url)
+    public static AppiumDriver createDriver(String url)
     {
-        AndroidDriver driver = null;
+        AppiumDriver driver = null;
 
         try {
-            driver = new AndroidDriver<MobileElement>(new URL(url), getDesiredCapabilities());
+            driver = new AppiumDriver<MobileElement>(new URL(url), getDesiredCapabilities());
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -76,4 +76,19 @@ public class CapabilityLoader
 
         return driver;
     }
+
+    public static AppiumDriver createSauceLabsDriver(String username, String accesskey, String region)
+    {
+        String sauceUrl;
+        if (region.equalsIgnoreCase("eu")) {
+            sauceUrl = "@ondemand.eu-central-1.saucelabs.com:443";
+        } else {
+            sauceUrl = "@ondemand.us-west-1.saucelabs.com:443";
+        }
+
+        String SAUCE_REMOTE_URL = "https://" + username + ":" + accesskey + sauceUrl +"/wd/hub";
+
+        return createDriver(SAUCE_REMOTE_URL);
+    }
+
 }

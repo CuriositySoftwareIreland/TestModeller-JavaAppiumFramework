@@ -444,12 +444,30 @@ public class MobileGeneralActions extends BasePage {
     }
 
     /**
-     * Opens a new application to given Appium server. Capabilities of appium server,
+     * Opens a new application to given Appium server with the Capabilities defined previously.
      * @name Connect Appium
      */
     public void connectAppium(String remote_url)
     {
         setDriver(CapabilityLoader.createDriver(remote_url));
+    }
+
+    /**
+     * Opens a new application to given SauceLabs US server via Appium.
+     * @name Connect SauceLabs (US Server)
+     */
+    public void connectSauceLabsUS(String username, String accessKey)
+    {
+        setDriver(CapabilityLoader.createSauceLabsDriver(username, accessKey, "us"));
+    }
+
+    /**
+     * Opens a new application to given SauceLabs EU server via Appium.
+     * @name Connect SauceLabs (EU Server)
+     */
+    public void connectSauceLabsEU(String username, String accessKey)
+    {
+        setDriver(CapabilityLoader.createSauceLabsDriver(username, accessKey, "eu"));
     }
 
     /**
