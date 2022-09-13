@@ -450,6 +450,8 @@ public class MobileGeneralActions extends BasePage {
     public void connectAppium(String remote_url)
     {
         setDriver(CapabilityLoader.createDriver(remote_url));
+
+        passStep("Connected to device");
     }
 
     /**
