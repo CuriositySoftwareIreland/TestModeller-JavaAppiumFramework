@@ -8,6 +8,7 @@ import ie.curiositysoftware.datacatalogue.DataListRowDto;
 import ie.curiositysoftware.datacatalogue.services.DataCatalogueTestCriteriaExecutionService;
 import ie.curiositysoftware.jobengine.services.ConnectionProfile;
 import ie.curiositysoftware.tdm.services.DataListService;
+import ie.curiositysoftware.testdata.TestDataResolver;
 import ie.curiositysoftware.utils.PageImplToHashMap;
 import ie.curiositysoftware.utils.UnirestHelper;
 import io.appium.java_client.AppiumDriver;
@@ -26,6 +27,18 @@ public class TestDataActions extends BasePage
 {
     public TestDataActions(AppiumDriver driver) {
         super(driver);
+    }
+
+    /**
+     * @name Resolve Test Data Expression
+     */
+    public String resolveDataExpression(String expression)
+    {
+        ConnectionProfile connectionProfile = new ConnectionProfile(PropertiesLoader.getProperties().getProperty("testModeller.apiHost"), PropertiesLoader.getProperties().getProperty("testModeller.apiKey"));
+
+        TestDataResolver dataResolver = new TestDataResolver(connectionProfile);
+
+        return dataResolver.ResolveTestDataValue(expression);
     }
 
     /**
