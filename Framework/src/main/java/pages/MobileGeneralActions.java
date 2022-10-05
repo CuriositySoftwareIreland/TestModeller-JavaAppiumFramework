@@ -1,6 +1,7 @@
 package pages;
 
 import com.fasterxml.jackson.databind.ser.Serializers;
+import ie.curiositysoftware.testmodeller.TestModellerIgnore;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileBy;
 import io.appium.java_client.MobileElement;
@@ -23,6 +24,7 @@ import utilities.CapabilityLoader;
 import java.time.Duration;
 
 public class MobileGeneralActions extends BasePage {
+    @TestModellerIgnore
     public MobileGeneralActions(AppiumDriver driver) {
         super(driver);
     }
@@ -442,7 +444,7 @@ public class MobileGeneralActions extends BasePage {
     }
 
     /**
-     * Opens a new application to given Appium server with the Capabilities defined previously.
+     * Opens a new connection to given Appium server with the Capabilities defined previously.
      * @name Connect Appium
      */
     public void connectAppium(String remote_url)
@@ -453,7 +455,27 @@ public class MobileGeneralActions extends BasePage {
     }
 
     /**
-     * Opens a new application to given SauceLabs US server via Appium.
+     * Opens an application on the device
+     * @name Open application
+     */
+    public void openApplication(String apkLocation, String appPackage, String appActivity)
+    {
+        addCapability("app", apkLocation);
+        addCapability("appPackage", appPackage);
+        addCapability("appActivity", appActivity);
+    }
+
+    /**
+     * Sets the device type to connect
+     * @name Set Device Platform (Android / Ios)
+     */
+    public void setDevice(String platformName)
+    {
+        addCapability("platformName", platformName);
+    }
+
+    /**
+     * Opens a new connection to given SauceLabs US server via Appium.
      * @name Connect SauceLabs (US Server)
      */
     public void connectSauceLabsUS(String username, String accessKey)
@@ -462,7 +484,7 @@ public class MobileGeneralActions extends BasePage {
     }
 
     /**
-     * Opens a new application to given SauceLabs EU server via Appium.
+     * Opens a new connection to given SauceLabs EU server via Appium.
      * @name Connect SauceLabs (EU Server)
      */
     public void connectSauceLabsEU(String username, String accessKey)

@@ -9,6 +9,7 @@ import ie.curiositysoftware.datacatalogue.services.DataCatalogueTestCriteriaExec
 import ie.curiositysoftware.jobengine.services.ConnectionProfile;
 import ie.curiositysoftware.tdm.services.DataListService;
 import ie.curiositysoftware.testdata.TestDataResolver;
+import ie.curiositysoftware.testmodeller.TestModellerIgnore;
 import ie.curiositysoftware.utils.PageImplToHashMap;
 import ie.curiositysoftware.utils.UnirestHelper;
 import io.appium.java_client.AppiumDriver;
@@ -25,6 +26,7 @@ import java.util.*;
 
 public class TestDataActions extends BasePage
 {
+    @TestModellerIgnore
     public TestDataActions(AppiumDriver driver) {
         super(driver);
     }
