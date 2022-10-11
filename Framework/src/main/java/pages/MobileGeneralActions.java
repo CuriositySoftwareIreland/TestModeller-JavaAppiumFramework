@@ -27,6 +27,8 @@ public class MobileGeneralActions extends BasePage {
     @TestModellerIgnore
     public MobileGeneralActions(AppiumDriver driver) {
         super(driver);
+
+        addCapability("platformName", "Android");
     }
 
     /**
