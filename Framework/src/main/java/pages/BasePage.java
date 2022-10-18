@@ -27,7 +27,7 @@ public class BasePage {
 
     public BasePage(AppiumDriver driver)
     {
-        setDriver(m_Driver);
+        setDriver(driver);
     }
 
     public void setDriver(AppiumDriver driver)
@@ -35,10 +35,15 @@ public class BasePage {
         this.m_Driver = driver;
 
         if (m_Driver != null) {
-        jsWait = new WebDriverWait(this.m_Driver, 10);
-//
-        jsExec = (JavascriptExecutor) this.m_Driver;
+            jsWait = new WebDriverWait(this.m_Driver, 10);
+
+            jsExec = (JavascriptExecutor) this.m_Driver;
         }
+    }
+
+    protected WebElement getWebElement(By identifer)
+    {
+        return m_Driver.findElement(identifer);
     }
 
     protected void failStep(String msg, String details)

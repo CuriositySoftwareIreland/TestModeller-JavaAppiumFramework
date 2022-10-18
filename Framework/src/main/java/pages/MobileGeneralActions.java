@@ -77,6 +77,17 @@ public class MobileGeneralActions extends BasePage {
     }
 
     /**
+     * Open a URL when performing browser testing
+     * @name Open URL
+     */
+    public void openURL(String url)
+    {
+        m_Driver.get(url);
+
+        passStepWithScreenshot("Opening URL '" + url + "'");
+    }
+
+    /**
      * Click element identified by locator.
      * @name Click Element
      */
@@ -465,6 +476,15 @@ public class MobileGeneralActions extends BasePage {
         addCapability("app", apkLocation);
         addCapability("appPackage", appPackage);
         addCapability("appActivity", appActivity);
+    }
+
+    /**
+     * Opens a browser on the device
+     * @name Open browser
+     */
+    public void openApplication(String browserType)
+    {
+        addCapability("browserName", browserType);
     }
 
     /**
