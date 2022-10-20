@@ -43,7 +43,6 @@ public class CapabilityLoader
     {
         DesiredCapabilities caps = new DesiredCapabilities();
         caps.setCapability("platformName", "Android");
-        caps.setCapability("testobject_test_name", ExtentReportManager.getTestName());
 
         try {
             return  new AppiumDriver<MobileElement>(new URL("http://127.0.0.1:4723/wd/hub"), caps);
@@ -89,6 +88,8 @@ public class CapabilityLoader
         }
 
         String SAUCE_REMOTE_URL = "https://" + username + ":" + accesskey + sauceUrl +"/wd/hub";
+
+        getDesiredCapabilities().setCapability("name", ExtentReportManager.getTestName());
 
         return createDriver(SAUCE_REMOTE_URL);
     }
