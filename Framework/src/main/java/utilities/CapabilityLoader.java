@@ -8,6 +8,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import sun.security.krb5.internal.crypto.Des;
+import utilities.reports.ExtentReportManager;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -42,6 +43,7 @@ public class CapabilityLoader
     {
         DesiredCapabilities caps = new DesiredCapabilities();
         caps.setCapability("platformName", "Android");
+        caps.setCapability("name", ExtentReportManager.currentTestName);
 
         try {
             return  new AppiumDriver<MobileElement>(new URL("http://127.0.0.1:4723/wd/hub"), caps);

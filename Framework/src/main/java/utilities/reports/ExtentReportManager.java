@@ -101,6 +101,11 @@ public class ExtentReportManager {
         currentTestName.set(method.getName());
     }
 
+    public static void getTestName()
+    {
+        return currentTestName.get();
+    }
+
     public static void passStep(AppiumDriver driver, String stepName)
     {
         reportThreadLocal.get().log(Status.PASS, stepName);
