@@ -101,7 +101,7 @@ public class ExtentReportManager {
         currentTestName.set(method.getName());
     }
 
-    public static void getTestName()
+    public static String getTestName()
     {
         return currentTestName.get();
     }

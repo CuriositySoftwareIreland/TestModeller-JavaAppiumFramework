@@ -43,7 +43,7 @@ public class CapabilityLoader
     {
         DesiredCapabilities caps = new DesiredCapabilities();
         caps.setCapability("platformName", "Android");
-        caps.setCapability("name", ExtentReportManager.currentTestName);
+        caps.setCapability("name", ExtentReportManager.getTestName());
 
         try {
             return  new AppiumDriver<MobileElement>(new URL("http://127.0.0.1:4723/wd/hub"), caps);
